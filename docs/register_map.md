@@ -9,7 +9,7 @@ Meaning of each register: see [spec/SPEC.md](../spec/SPEC.md) §3.
 ## How to fill this page
 
 ```
-make synth      # needs Vitis HLS 2025.1
+make synth      # needs Vitis HLS 2025.2
 make regmap     # parses the generated xsobel_otsu_hw.h into the section below
 ```
 

@@ -91,7 +91,7 @@ class SobelOtsu(_Base):
     Args:
         bitfile: path to sobel_otsu.bit (the .hwh with the same stem must sit next to it).
         ignore_version: passed to pynq.Overlay. Needed when the bitstream was built
-            with a newer Vivado (e.g. 2025.1) than the PYNQ image expects (2024.1).
+            with a newer Vivado (e.g. 2025.2) than the PYNQ image expects (2024.1).
         timeout_s: per-frame DMA/IP timeout.
     """
 
@@ -210,7 +210,7 @@ def make_backend(kind: str | None = None, bitfile=DEFAULT_BITFILE, ignore_versio
     """Return SobelOtsu ("hw"), SoftwareBackend ("sw") or, for "auto", whichever works.
 
     kind defaults to $SOBEL_BACKEND, then "auto". ignore_version defaults to True
-    here because our bitstreams are built with Vivado 2025.1 (see README).
+    here because our bitstreams are built with Vivado 2025.2 (see README).
     """
     kind = (kind or os.environ.get("SOBEL_BACKEND", "auto")).lower()
     if kind == "sw":

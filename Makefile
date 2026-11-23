@@ -6,7 +6,7 @@
 # ---- tool versions and commands: change here only ----------------------------
 # Switching the whole flow to 2024.1 (to match PYNQ v3.1) = edit XILINX_VERSION
 # and source that version's settings64 script. See README "Version mismatch".
-XILINX_VERSION ?= 2025.1
+XILINX_VERSION ?= 2025.2
 HLS            ?= vitis-run --mode hls --tcl
 VIVADO         ?= vivado -mode batch -source
 PART           ?= xczu3eg-sfvc784-2-e

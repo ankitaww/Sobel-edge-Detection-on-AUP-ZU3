@@ -1,8 +1,8 @@
-# run_hls.tcl — Vitis HLS 2025.1 flow for the sobel_otsu IP (Unified-IDE component format).
+# run_hls.tcl — Vitis HLS 2025.2 flow for the sobel_otsu IP (Unified-IDE component format).
 #
 # Run from this directory:
 #     vitis-run --mode hls --tcl run_hls.tcl
-# (the old `vitis_hls -f` entry point is deprecated in 2025.1).
+# (the old `vitis_hls -f` entry point is deprecated since 2025.1).
 #
 # Selected through environment variables (the Makefile sets them):
 #     HLS_STEP           csim | synth | cosim | export | all      (default: csim)
@@ -68,7 +68,7 @@ if {$do_cosim} {
 }
 if {$do_export} {
     file mkdir $export_dir
-    # TODO(verify-in-vitis): in the 2025.1 component flow the zip may also be
+    # TODO(verify-in-vitis): in the 2025.2 component flow the zip may also be
     # written under sobel_otsu_hls/hls/impl/ip/; vivado/create_project.tcl
     # searches both places for component.xml / the zip.
     export_design -format ip_catalog -output [file join $export_dir sobel_otsu.zip]

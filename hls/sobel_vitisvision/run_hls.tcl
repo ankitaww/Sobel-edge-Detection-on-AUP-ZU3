@@ -1,4 +1,4 @@
-# run_hls.tcl — optional Vitis Vision baseline (xf::cv::Sobel). Vitis HLS 2025.1.
+# run_hls.tcl — optional Vitis Vision baseline (xf::cv::Sobel). Vitis HLS 2025.2.
 #
 #     XF_VISION_INCLUDE=/path/to/Vitis_Libraries/vision/L1/include \
 #         vitis-run --mode hls --tcl run_hls.tcl

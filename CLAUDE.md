@@ -1,7 +1,7 @@
 # CLAUDE.md — rules for AI-assisted work on this repo
 
 Project: self-tuning Sobel edge detector (HLS IP + PYNQ driver) on the AMD
-AUP-ZU3 (XCZU3EG, 8 GB), Vivado/Vitis 2025.1, PYNQ v3.1. See README.md.
+AUP-ZU3 (XCZU3EG, 8 GB), Vivado/Vitis 2025.2, PYNQ v3.1. See README.md.
 
 ## Non-negotiable rules
 
@@ -34,7 +34,7 @@ AUP-ZU3 (XCZU3EG, 8 GB), Vivado/Vitis 2025.1, PYNQ v3.1. See README.md.
 * Every pragma gets a comment saying *why*.
 * `ap_uint<N> << k` keeps width N — widen before shifting.
 * Pixel loop must stay II=1; check the csynth report after every change.
-* 2025.1 flow: `vitis-run --mode hls --tcl run_hls.tcl`, `open_component`,
+* 2025.2 flow: `vitis-run --mode hls --tcl run_hls.tcl`, `open_component`,
   not `vitis_hls -f` / `open_project`.
 
 ## Workflow

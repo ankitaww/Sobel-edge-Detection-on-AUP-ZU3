@@ -21,7 +21,7 @@ camera/file ─► PS (Python) ─► DDR ─► AXI DMA ─► sobel_otsu (PL, 
 |---|---|
 | [spec/SPEC.md](spec/SPEC.md) | **pixel-exact specification: the source of truth** |
 | [golden/](golden/) | NumPy golden model, PGM I/O, test-vector generator, pytest |
-| [hls/sobel_otsu/](hls/sobel_otsu/) | HLS IP, C++ testbench, `run_hls.tcl` (2025.1 component flow) |
+| [hls/sobel_otsu/](hls/sobel_otsu/) | HLS IP, C++ testbench, `run_hls.tcl` (2025.2 component flow) |
 | [hls/sobel_vitisvision/](hls/sobel_vitisvision/) | optional `xf::cv::Sobel` baseline (needs Vitis_Libraries) |
 | [vivado/](vivado/) | block design + bitstream script |
 | [pynq/](pynq/) | driver `SobelOtsu` + `SoftwareBackend`, overlay, notebooks |
@@ -43,10 +43,10 @@ On Windows, run `make` from Git Bash or MSYS2 (`mingw32-make` works). The
 recipes use POSIX shell syntax. If `python3` isn't your interpreter, pass
 `PYTHON=python` (or the path to a venv's python).
 
-## Build order (machine with Vivado/Vitis 2025.1)
+## Build order (machine with Vivado/Vitis 2025.2)
 
 ```bash
-source /tools/Xilinx/2025.1/Vivado/settings64.sh   # path depends on your install
+source /tools/Xilinx/2025.2/Vivado/settings64.sh   # path depends on your install
 make test vectors
 make csim           # C simulation vs golden vectors, must print RESULT: PASS
 make synth          # check the report: PIXEL loop II=1, timing at 150 MHz
@@ -111,9 +111,9 @@ sob.stats()
 Modes: 0 = magnitude, 1 = manual threshold, 2 = auto (Otsu), 3 = auto + smoothing.
 See [SPEC.md §3–4](spec/SPEC.md).
 
-### Version mismatch (PYNQ v3.1 vs Vivado 2025.1)
+### Version mismatch (PYNQ v3.1 vs Vivado 2025.2)
 
-PYNQ v3.1 was released with Vivado **2024.1**; we build with **2025.1**. A
+PYNQ v3.1 was released with Vivado **2024.1**; we build with **2025.2**. A
 simple design (DMA + HLS IP + GPIO) normally still loads with
 `Overlay(bitfile, ignore_version=True)`, which the driver passes through
 (`make_backend()` sets it by default).

@@ -13,7 +13,7 @@
 # Cell names (sobel_otsu_0, axi_dma_0, gpio_sw, gpio_led) are part of the
 # driver contract — pynq/sobel_otsu.py accesses them by name. Do not rename.
 #
-# Everything below that has not been run in Vivado 2025.1 yet is marked
+# Everything below that has not been run in Vivado 2025.2 yet is marked
 # TODO(verify-in-vivado).
 
 proc env_or {name default} {
@@ -130,7 +130,7 @@ apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_boar
 # PSU__USE__M_AXI_GP2 = M_AXI_HPM0_LPD (unused: off)
 # PSU__USE__S_AXI_GP2 = S_AXI_HP0_FPD  (PL -> DDR, DMA data path)
 # TODO(verify-in-vivado): these GP<n> <-> HPM/HP name mappings are the long-standing
-# ones (2019.x-2024.x); confirm in the 2025.1 PS customisation GUI if validation complains.
+# ones (2019.x-2024.x); confirm in the 2025.2 PS customisation GUI if validation complains.
 set_property -dict [list \
     CONFIG.PSU__USE__M_AXI_GP0 {1} \
     CONFIG.PSU__USE__M_AXI_GP1 {0} \

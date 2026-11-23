@@ -66,7 +66,7 @@ loop + Otsu [ ] µs + DMA / Python overhead [ ] ms → [ ] fps.
 
 ## 6. Risks and open questions
 
-1. PYNQ v3.1 vs Vivado 2025.1 overlay compatibility (fallback: rebuild with 2024.1).
+1. PYNQ v3.1 vs Vivado 2025.2 overlay compatibility (fallback: rebuild with 2024.1).
 2. Float divide in HLS must be IEEE round-to-nearest for bit-exact Otsu — confirmed by cosim? [ ]
 3. Histogram DEPENDENCE pragma: II = 1 achieved without a cosim mismatch? [ ]
 4. Saturation of `mag` at high contrast pulls Otsu down (seen in synthetic robustness sweep at gain > 1.2). Mitigation? [ ]
