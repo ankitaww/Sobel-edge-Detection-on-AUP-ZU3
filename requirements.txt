@@ -1,0 +1,11 @@
+# Host-side Python packages (laptop / build machine). Python 3.10+.
+# The board (PYNQ v3.1) already has numpy, opencv and pynq.
+numpy
+opencv-python
+scipy
+scikit-image
+matplotlib
+pytest
+jupytext
+nbformat
+pillow

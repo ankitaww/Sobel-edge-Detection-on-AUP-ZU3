@@ -1,0 +1,28 @@
+# Vivado / Vitis HLS build output
+vivado/build/
+hls/sobel_otsu/sobel_otsu_hls/
+hls/sobel_otsu/export/
+hls/sobel_vitisvision/sobel_vv_hls/
+hls/sobel_vitisvision/export/
+*.jou
+*.log
+*.str
+.Xil/
+build/
+
+# generated test vectors (`make vectors` recreates them deterministically; ~12 MB)
+hls/tb_data/
+
+# generated notebooks (`make notebooks`; the .py files are the source)
+pynq/notebooks/*.ipynb
+pynq/notebooks/.ipynb_checkpoints/
+pynq/notebooks/benchmark_results.csv
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# datasets
+data/bsds500/
