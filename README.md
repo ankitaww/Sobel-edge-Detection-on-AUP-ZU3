@@ -27,13 +27,60 @@ camera/file ─► PS (Python) ─► DDR ─► AXI DMA ─► sobel_otsu (PL, 
 | [pynq/](pynq/) | driver `SobelOtsu` + `SoftwareBackend`, overlay, notebooks |
 | [eval/](eval/) | BSDS500 F-score, brightness/contrast robustness |
 | [docs/](docs/) | register map, design-review template |
+| [build.bat](build.bat) / [build.sh](build.sh) | one-command build (Windows / Linux), no Python, git or make needed |
+
+## Build on a laptop with only Vivado/Vitis
+
+For a Windows laptop with just Vivado + Vitis 2025.2 installed (no Python, git
+or make):
+
+1. On GitHub: **Code → Download ZIP**.
+2. Extract it so that `build.bat` ends up at **`C:\sobel\build.bat`**. Long
+   paths or spaces break Vivado, and the script refuses them.
+3. Once per laptop, install the AUP-ZU3 board files. Open Vivado, and in the
+   Tcl console at the bottom run:
+   ```tcl
+   xhub::refresh_catalog [xhub::get_xstores xilinx_board_store]
+   xhub::install [xhub::get_xitems *aup-zu3*]
+   ```
+   (or *Tools → Vivado Store → Boards → AUP-ZU3 → Install*).
+4. Open a Command Prompt and run:
+   ```bat
+   cd /d C:\sobel
+   build.bat all
+   ```
+   This runs csim → synth → cosim → export → bit → board and stops at the
+   first failure, printing the end of that step's log. The `bit` (Vivado) step
+   takes longest; each step prints its elapsed time. If Vivado is not in `C:\Xilinx\2025.2` or
+   `C:\AMDDesignTools\2025.2`, first run `set XILINX_ROOT=D:\path\to\2025.2`.
+5. Upload `results\sobel_board.zip` to the board. `build.bat` prints the four
+   steps at the end (Jupyter at `http://192.168.3.1:9090` → Upload → Terminal
+   `unzip -o sobel_board.zip` → `%run 01_bringup.py` in `sobel/notebooks`).
+
+Single steps: `build.bat csim`, `build.bat synth bit`, … Add `--dry-run` to see the
+commands without running them. To change the clock or other settings, use
+`set CLK_MHZ=125` (or `PART`, `COSIM_MAX_PIXELS`, `JOBS`) before calling the script.
+
+What you get in `results\`:
+
+| file | content |
+|---|---|
+| `logs\<step>.log` | full console output of each step |
+| `hls_summary.txt` | pixel-loop II (big **WARNING** if ≠ 1), clock, 1080p latency in ms, LUT/FF/BRAM/DSP |
+| `vivado_summary.txt` | Vivado version, board part, PL clock, WNS, utilization, power, GPIO cells (appended per run) |
+| `timing_summary.rpt`, `utilization.rpt`, `power.rpt` | full Vivado reports |
+| `sobel_board.zip` | everything the board needs |
+
+On Linux, `./build.sh all` does the same (`XILINX_ROOT` defaults to
+`/tools/Xilinx/2025.2`). The manual `make` / `vitis-run` / `vivado` commands
+below still work as a fallback.
 
 ## Quick start (laptop, no board, no Xilinx tools)
 
 ```bash
 python -m pip install -r requirements.txt     # or: make setup
 make test                                     # golden model unit tests
-make vectors                                  # hls/tb_data/ (107 frames, ~12 MB)
+make vectors                                  # regenerate hls/tb_data/ (committed; 107 frames, ~12 MB)
 SOBEL_BACKEND=sw python eval/bsds_eval.py --synthetic
 SOBEL_BACKEND=sw python eval/robustness_sweep.py --synthetic
 make notebooks                                # .py -> .ipynb (open with Jupyter, runs with the SW backend)
@@ -131,10 +178,11 @@ flow, which we expect 2024.1 to support as well. If not, use
 | what | status |
 |---|---|
 | golden model vs independent naive reference (pytest, 39 tests) | ✅ passes |
-| test vectors (107 frames, 14 sequences incl. 3×3, 4×5, 1080p, T_reg feedback) | ✅ generated |
+| test vectors (107 frames, 14 sequences incl. 3×3, 4×5, 1080p, T_reg feedback) | ✅ committed; pytest checks they match the generator |
 | HLS C++ logic vs golden (all 107 frames, 0 mismatches) | ✅ with g++ and a throwaway local stream shim; **real csim not run yet** |
 | `make csim` / `synth` / `cosim` / `export` | ⏳ TODO(verify-in-vitis) |
 | `make bit` (block design, timing) | ⏳ TODO(verify-in-vivado) |
+| `build.bat` / `build.sh` | ✅ full flow run with stub `vitis-run`/`vivado` (Windows 11 + Git Bash); ⏳ TODO(verify-on-windows) with the real tools |
 | driver `SobelOtsu` on the board | ⏳ TODO(verify-on-board) |
 | `SoftwareBackend`, notebooks 01/02, eval scripts (synthetic data) | ✅ run on a laptop |
 

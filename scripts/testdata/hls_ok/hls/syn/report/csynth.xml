@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- fake csynth.xml in the classic Vitis HLS layout, for test_report_summary.tcl -->
+<profile>
+  <ReportVersion><Version>2025.2</Version></ReportVersion>
+  <UserAssignments>
+    <unit>ns</unit>
+    <ProductFamily>zynquplus</ProductFamily>
+    <Part>xczu3eg-sfvc784-2-e</Part>
+    <TopModelName>sobel_otsu</TopModelName>
+    <TargetClockPeriod>6.67</TargetClockPeriod>
+    <ClockUncertainty>1.80</ClockUncertainty>
+  </UserAssignments>
+  <PerformanceEstimates>
+    <SummaryOfTimingAnalysis><unit>ns</unit><EstimatedClockPeriod>4.862</EstimatedClockPeriod></SummaryOfTimingAnalysis>
+    <SummaryOfOverallLatency>
+      <unit>clock cycles</unit>
+      <Best-caseLatency>612</Best-caseLatency>
+      <Average-caseLatency>undef</Average-caseLatency>
+      <Worst-caseLatency>2077214</Worst-caseLatency>
+      <Interval-min>613</Interval-min>
+      <Interval-max>2077215</Interval-max>
+    </SummaryOfOverallLatency>
+    <SummaryOfLoopLatency>
+      <VITIS_LOOP_90_1>
+        <TripCount>256</TripCount><Latency>256</Latency><PipelineII>1</PipelineII><PipelineDepth>1</PipelineDepth>
+      </VITIS_LOOP_90_1>
+      <PIXEL>
+        <Slack>-</Slack>
+        <TripCount><range><min>16</min><max>2076601</max></range></TripCount>
+        <Latency><range><min>21</min><max>2076606</max></range></Latency>
+        <PipelineII>1</PipelineII>
+        <PipelineDepth>7</PipelineDepth>
+      </PIXEL>
+    </SummaryOfLoopLatency>
+  </PerformanceEstimates>
+  <AreaEstimates>
+    <Resources><BRAM_18K>6</BRAM_18K><DSP>5</DSP><FF>2876</FF><LUT>4120</LUT><URAM>0</URAM></Resources>
+    <AvailableResources><BRAM_18K>432</BRAM_18K><DSP>360</DSP><FF>141120</FF><LUT>70560</LUT><URAM>0</URAM></AvailableResources>
+  </AreaEstimates>
+  <Empty/>
+</profile>

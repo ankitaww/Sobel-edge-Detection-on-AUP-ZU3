@@ -39,6 +39,7 @@ set build_dir   [file join $script_dir build]
 set proj_name   sobel_otsu
 set bd_name     design_1
 set overlay_dir [file join $root pynq overlay]
+set results     [file join $root results]
 
 # ---------------------------------------------------------------- version check
 set vver [version -short]
@@ -96,7 +97,7 @@ foreach x $ip_xml {
 if {$ip_repo eq ""} {
     set zip [file join $hls_dir export sobel_otsu.zip]
     if {![file exists $zip]} {
-        puts "ERROR: HLS IP not found. Run `make export` first (expected $zip)."
+        puts "ERROR: HLS IP not found. Run `make export` / `build.bat export` first (expected [file nativename $zip])."
         exit 1
     }
     set ip_repo [file join $build_dir ip_repo sobel_otsu]
@@ -247,8 +248,41 @@ report_utilization    -file [file join $build_dir utilization.rpt]
 report_power          -file [file join $build_dir power.rpt]
 set wns [get_property SLACK [get_timing_paths -max_paths 1 -nworst 1 -setup]]
 puts "== WNS = $wns ns"
+
+# ---------------------------------------------------------------- summary
+# Append the key numbers to results/vivado_summary.txt and copy the three
+# reports next to it. Written before the timing check so a failing run is
+# recorded too. A parsing problem must never fail the build.
+if {[catch {
+    source [file join $root scripts report_summary.tcl]
+    file mkdir $results
+    foreach rpt {timing_summary utilization power} {
+        file copy -force [file join $build_dir $rpt.rpt] [file join $results $rpt.rpt]
+    }
+    set act_mhz "?"
+    catch { set act_mhz [get_property CONFIG.PSU__CRL_APB__PL0_REF_CTRL__ACT_FREQMHZ $ps] }
+    set L {}
+    lappend L "==== sobel_otsu Vivado run  [clock format [clock seconds] -format {%Y-%m-%d %H:%M:%S}] ===="
+    lappend L "vivado version     : $vver"
+    lappend L "board part         : $board_part"
+    lappend L "part               : $part"
+    lappend L "PL clock pl_clk0   : requested $clk_mhz MHz, actual $act_mhz MHz"
+    lappend L "WNS (setup)        : $wns ns [expr {$wns ne {} && $wns >= 0 ? {(timing met)} : {(TIMING NOT MET)}}]"
+    lappend L "gpio_led created   : [expr {[lsearch -exact $gpio_cells gpio_led] >= 0 ? {yes} : {NO}}]"
+    lappend L "gpio_sw created    : [expr {[lsearch -exact $gpio_cells gpio_sw] >= 0 ? {yes} : {NO}}]"
+    lappend L "post-implementation utilization:"
+    set L [concat $L [rs_vivado_report_lines [file join $build_dir utilization.rpt] [file join $build_dir power.rpt]]]
+    set f [open [file join $results vivado_summary.txt] a]
+    set text [join $L "\n"]
+    puts $f "$text\n"
+    close $f
+    puts "\n$text\n== appended to [file nativename [file join $results vivado_summary.txt]]"
+} err]} {
+    puts "WARNING: could not write results/vivado_summary.txt: $err"
+}
+
 if {$wns eq "" || $wns < 0} {
-    puts "ERROR: timing NOT met (WNS = $wns ns). See $build_dir/timing_summary.rpt."
+    puts "ERROR: timing NOT met (WNS = $wns ns). See [file nativename [file join $build_dir timing_summary.rpt]]."
     puts "       Lower CLK_MHZ (HLS and Vivado together) or fix the critical path."
     exit 1
 }
@@ -264,5 +298,5 @@ if {[llength $bit] == 0 || [llength $hwh] == 0} {
 }
 file copy -force [lindex $bit 0] [file join $overlay_dir sobel_otsu.bit]
 file copy -force [lindex $hwh 0] [file join $overlay_dir sobel_otsu.hwh]
-puts "== Overlay written to $overlay_dir/sobel_otsu.{bit,hwh}"
+puts "== Overlay written to [file nativename [file join $overlay_dir sobel_otsu]].{bit,hwh}"
 exit 0

@@ -44,7 +44,17 @@ make test            # golden unit tests (always)
 make vectors         # after any golden change
 make csim            # or: make tb-gpp HLS_INCLUDE=$XILINX_HLS/include
 make synth cosim     # before merging HLS changes
+build.bat all        # Windows laptop with only Vivado/Vitis (Linux: ./build.sh all)
 ```
+
+hls/tb_data/ is committed (the build laptop has no Python): if you change
+golden/ or gen_vectors.py, rerun `make vectors` and commit hls/tb_data.
+`make test` fails if the committed vectors are stale.
+
+build.bat/build.sh only orchestrate: keep the build logic in run_hls.tcl and
+create_project.tcl. Report parsing lives in scripts/report_summary.tcl
+(test: `tclsh scripts/test_report_summary.tcl`). build.bat must stay CRLF
+(.gitattributes) and must `call` every .bat (vitis-run, vivado, settings64).
 
 Add a test vector (golden/gen_vectors.py) for every bug you fix.
 Keep modules short and commented for a student team.

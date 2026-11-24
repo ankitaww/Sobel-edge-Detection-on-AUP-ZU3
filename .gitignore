@@ -10,8 +10,12 @@ hls/sobel_vitisvision/export/
 .Xil/
 build/
 
-# generated test vectors (`make vectors` recreates them deterministically; ~12 MB)
-hls/tb_data/
+# hls/tb_data/ (test vectors) IS committed: the build laptop has no Python.
+# After changing golden/ or gen_vectors.py run `make vectors` and commit it.
+
+# build.bat / build.sh output (logs, summaries, board zip)
+results/*
+!results/.gitkeep
 
 # generated notebooks (`make notebooks`; the .py files are the source)
 pynq/notebooks/*.ipynb

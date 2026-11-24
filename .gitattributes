@@ -1,0 +1,10 @@
+# Test vectors: store and check out byte-for-byte (PGM headers contain '\n';
+# core.autocrlf would otherwise corrupt them and the staleness test).
+hls/tb_data/** -text
+
+# cmd.exe misparses labels/goto in LF-only batch files, so build.bat is
+# committed with CRLF bytes and never converted (also in GitHub ZIP downloads).
+*.bat -text
+
+# Shell scripts must keep LF or bash fails with "$'\r': command not found".
+*.sh text eol=lf

@@ -122,7 +122,9 @@ def main() -> None:
             lines.append(f"{seq_id} {frame_id} inputs/{name}.pgm {exp} {mode} {tm} {reset} "
                          f"{info['thresh_used']} {info['otsu_thresh']} {info['edge_count']}")
             frame_id += 1
-    (out / "cases.txt").write_text("\n".join(lines) + "\n")
+    # Bytes, not text mode: always LF line endings, so the committed vectors are
+    # identical whether they were generated on Windows or Linux.
+    (out / "cases.txt").write_bytes(("\n".join(lines) + "\n").encode("ascii"))
     print(f"wrote {len(imgs)} images, {frame_id} frames -> {out}")
 
 

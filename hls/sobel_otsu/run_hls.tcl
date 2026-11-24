@@ -25,11 +25,14 @@ set cosim_max  [env_or COSIM_MAX_PIXELS 20000]
 set here       [file normalize [file dirname [info script]]]
 set tb_data    [file normalize [file join $here .. tb_data]]
 set export_dir [file join $here export]
+set root       [file normalize [file join $here .. ..]]
+set results    [file join $root results]
 set period_ns  [format "%.3f" [expr {1000.0 / $clk_mhz}]]
 
 puts "== sobel_otsu HLS: step=$step part=$part clock=${clk_mhz} MHz (${period_ns} ns)"
 if {![file exists [file join $tb_data cases.txt]]} {
-    puts "ERROR: $tb_data/cases.txt not found. Run `make vectors` first."
+    puts "ERROR: [file nativename [file join $tb_data cases.txt]] not found."
+    puts "       The vectors are committed to git; re-extract the repo or run `make vectors`."
     exit 1
 }
 
@@ -60,6 +63,15 @@ if {$do_csim} {
 }
 if {$do_synth} {
     csynth_design
+    # Short summary (pixel-loop II, clock, latency, resources) for the team, in
+    # results/hls_summary.txt. A parsing problem must never fail the build.
+    if {[catch {
+        source [file join $root scripts report_summary.tcl]
+        rs_hls_write_summary [file join $here sobel_otsu_hls] [file join $results hls_summary.txt] $clk_mhz $part
+    } err]} {
+        puts "WARNING: could not write results/hls_summary.txt: $err"
+        puts "WARNING: read the csynth report under sobel_otsu_hls/ by hand."
+    }
 }
 if {$do_cosim} {
     # RTL simulation is ~1000x slower than csim; skip the 640x480 / 1080p sequences
@@ -72,7 +84,7 @@ if {$do_export} {
     # written under sobel_otsu_hls/hls/impl/ip/; vivado/create_project.tcl
     # searches both places for component.xml / the zip.
     export_design -format ip_catalog -output [file join $export_dir sobel_otsu.zip]
-    puts "== exported IP to $export_dir/sobel_otsu.zip"
+    puts "== exported IP to [file nativename [file join $export_dir sobel_otsu.zip]]"
 }
 
 close_component
